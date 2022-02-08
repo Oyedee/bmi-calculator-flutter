@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'reusable_card.dart';
@@ -16,7 +17,7 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
-  late GenderType selectedGender = GenderType.neutral;
+  late GenderType selectedGender = GenderType.male;
 
   @override
   Widget build(BuildContext context) {
@@ -30,38 +31,34 @@ class _InputPageState extends State<InputPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedGender = GenderType.male;
+                    child: ReusableCard(
+                      onPress: () {
+                        WidgetsBinding.instance?.addPostFrameCallback((_) {
+                          setState(() {
+                            selectedGender = GenderType.male;
+                          });
                         });
                       },
-                      child: ReusableCard(
-                        colour: selectedGender == GenderType.male
-                            ? activeCardColor
-                            : inactiveCardColor,
-                        cardChild: CardContent(
-                          icon: FontAwesomeIcons.mars,
-                          label: 'MALE',
-                        ),
+                      colour: selectedGender == GenderType.male
+                          ? activeCardColor
+                          : inactiveCardColor,
+                      cardChild: CardContent(
+                        icon: FontAwesomeIcons.mars,
+                        label: 'MALE',
                       ),
                     ),
                   ),
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedGender = GenderType.female;
-                        });
+                    child: ReusableCard(
+                      onPress: () {
+                        selectedGender = GenderType.female;
                       },
-                      child: ReusableCard(
-                        colour: selectedGender == GenderType.female
-                            ? activeCardColor
-                            : inactiveCardColor,
-                        cardChild: CardContent(
-                          icon: FontAwesomeIcons.venus,
-                          label: 'FEMALE',
-                        ),
+                      colour: selectedGender == GenderType.female
+                          ? activeCardColor
+                          : inactiveCardColor,
+                      cardChild: CardContent(
+                        icon: FontAwesomeIcons.venus,
+                        label: 'FEMALE',
                       ),
                     ),
                   ),
@@ -70,6 +67,7 @@ class _InputPageState extends State<InputPage> {
             ),
             Expanded(
               child: ReusableCard(
+                onPress: () {},
                 colour: activeCardColor,
                 cardChild: CardContent(
                   label: 'MIDCARD',
@@ -82,6 +80,7 @@ class _InputPageState extends State<InputPage> {
                 children: [
                   Expanded(
                     child: ReusableCard(
+                      onPress: () {},
                       colour: activeCardColor,
                       cardChild: CardContent(
                         icon: FontAwesomeIcons.play,
@@ -91,6 +90,7 @@ class _InputPageState extends State<InputPage> {
                   ),
                   Expanded(
                     child: ReusableCard(
+                      onPress: () {},
                       colour: activeCardColor,
                       cardChild: CardContent(
                         icon: FontAwesomeIcons.male,
@@ -102,10 +102,18 @@ class _InputPageState extends State<InputPage> {
               ),
             ),
             Container(
+              alignment: Alignment.center,
               color: bottomContainerColor,
               margin: EdgeInsets.only(top: 10),
               width: double.infinity,
               height: bottomContainerHeight,
+              child: Text(
+                'CALCULATE',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
             )
           ],
         ));
