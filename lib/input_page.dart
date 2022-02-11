@@ -1,8 +1,11 @@
+import 'package:bmi_calculator/result_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'reusable_card.dart';
 import 'card_content.dart';
 import 'constants.dart';
+import 'round_icon_button.dart';
+import 'calculator_brain.dart';
 
 enum GenderType { male, female, neutral }
 
@@ -30,34 +33,38 @@ class _InputPageState extends State<InputPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: ReusableCard(
-                      onPress: () {
-                        WidgetsBinding.instance?.addPostFrameCallback((_) {
-                          setState(() {
-                            selectedGender = GenderType.male;
-                          });
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedGender = GenderType.male;
                         });
                       },
-                      colour: selectedGender == GenderType.male
-                          ? kActiveCardColor
-                          : kInactiveCardColor,
-                      cardChild: CardContent(
-                        icon: FontAwesomeIcons.mars,
-                        label: 'MALE',
+                      child: ReusableCard(
+                        colour: selectedGender == GenderType.male
+                            ? kActiveCardColor
+                            : kInactiveCardColor,
+                        cardChild: CardContent(
+                          icon: FontAwesomeIcons.mars,
+                          label: 'MALE',
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: ReusableCard(
-                      onPress: () {
-                        selectedGender = GenderType.female;
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedGender = GenderType.female;
+                        });
                       },
-                      colour: selectedGender == GenderType.female
-                          ? kActiveCardColor
-                          : kInactiveCardColor,
-                      cardChild: CardContent(
-                        icon: FontAwesomeIcons.venus,
-                        label: 'FEMALE',
+                      child: ReusableCard(
+                        colour: selectedGender == GenderType.female
+                            ? kActiveCardColor
+                            : kInactiveCardColor,
+                        cardChild: CardContent(
+                          icon: FontAwesomeIcons.venus,
+                          label: 'FEMALE',
+                        ),
                       ),
                     ),
                   ),
@@ -66,7 +73,6 @@ class _InputPageState extends State<InputPage> {
             ),
             Expanded(
               child: ReusableCard(
-                onPress: () {},
                 colour: kActiveCardColor,
                 cardChild: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -121,7 +127,6 @@ class _InputPageState extends State<InputPage> {
                 children: [
                   Expanded(
                     child: ReusableCard(
-                        onPress: () {},
                         colour: kActiveCardColor,
                         cardChild: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -163,7 +168,6 @@ class _InputPageState extends State<InputPage> {
                   ),
                   Expanded(
                     child: ReusableCard(
-                      onPress: () {},
                       colour: kActiveCardColor,
                       cardChild: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -207,42 +211,32 @@ class _InputPageState extends State<InputPage> {
                 ],
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              color: kBottomContainerColor,
-              margin: EdgeInsets.only(top: 10),
-              width: double.infinity,
-              height: kBottomContainerHeight,
-              child: Text(
-                'CALCULATE',
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+            GestureDetector(
+              onTap: () {
+                CalculatorBrain calc =
+                    CalculatorBrain(height: height, weight: weight);
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ResultPage(
+                            bmiResult: calc.calculateBMI(),
+                            resultText: calc.getResult(),
+                            interpretation: calc.getInterpretation())));
+              },
+              child: Container(
+                alignment: Alignment.center,
+                color: kBottomContainerColor,
+                margin: EdgeInsets.only(top: 10),
+                width: double.infinity,
+                height: kBottomContainerHeight,
+                child: Text(
+                  'CALCULATE',
+                  style: kLargeButtonTextStyle,
+                ),
               ),
             )
           ],
         ));
-  }
-}
-
-class RoundIconButton extends StatelessWidget {
-  final IconData icon;
-  final Function onPress;
-
-  RoundIconButton({required this.icon, required this.onPress});
-
-  @override
-  Widget build(BuildContext context) {
-    return RawMaterialButton(
-      child: Icon(icon),
-      onPressed: () {
-        onPress();
-      },
-      elevation: 6,
-      constraints: BoxConstraints.tightFor(width: 56, height: 56),
-      shape: CircleBorder(),
-      fillColor: Color(0xFF4C4F5E),
-    );
   }
 }
